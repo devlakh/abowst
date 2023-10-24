@@ -1,0 +1,251 @@
+@extends("layout")
+
+@section("title", "Academic Works:Create Entry")
+
+@section("content")
+
+    <div class="card bg-secondary">
+
+    <!-- <form class="card-body" method="POST" action="{{ route('work.store') }}"> -->
+    <form class="card-body" action="">
+    @csrf
+
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" placeholder="Enter Academic Title" data-title>
+    </div>
+
+    <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" class="form-control" id="date" data-date>
+    </div>
+
+    <div class="form-group">
+        <label for="department">Department</label>
+        <input type="text" class="form-control" id="department" placeholder="Enter Department" data-department>
+    </div>
+
+    <div class="form-group">
+        <label for="type">Type of Academic Text</label>
+        <select id="type" class="form-control" data-type>
+            <option value="" disabled selected>Type of Academic Text</option>
+            <option value="thesis">Thesis</option>
+            <option value="capstone">Capstone</option>
+            <option value="dissertation">Dissertation</option>
+            <option value="journal">Journal</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" rows="1" data-description></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="abstract">Abstract</label>
+        <textarea class="form-control" id="abstract" rows="3" data-abstract></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="add_author">Open Menu For Adding Authors</label>
+    </div>
+
+    <div class="form-group">
+        <button id="add_author" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+            Add Author
+        </button>
+    </div>
+
+    <div class="form_group">
+        <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">DOB</th>
+            <th scope="col">Department</th>
+            <th scope="col">Evict</th>
+          </tr>
+        </thead>
+        <tbody data-authors>
+        </tbody>
+        </table>
+    </div>
+
+    <button type="button" class="btn btn-primary" onclick="submit_btn();">Submit</button>
+
+    </form>
+    
+    </div>
+
+
+    <!-- MODAL START-->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header bg-dark">
+            <h5 class="modal-title" id="exampleModalLongTitle">Enter Authors Information</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body bg-dark">
+        <form>
+            
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col">
+                        <label for="modal_prefix">Prefix</label>
+                        <input type="text" class="form-control" id="modal_prefix" placeholder="Eng. / Dr. / Bro / Dude" data-modal_prefix>
+                    </div>
+                    <div class="col">
+                        <label for="modal_suffix">Suffix</label>
+                        <input type="text" class="form-control" id="modal_suffix" placeholder="Jr. / Sr. / iii / xxvii" data-modal_suffix>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="modal_given_name">Given Name</label>
+                <input type="text" class="form-control" id="modal_given_name" placeholder="Enter Given Name" data-modal_given_name>
+            </div>
+
+            <div class="form-group">
+                <label for="modal_middle_name">Middle Name</label>
+                <input type="text" class="form-control" id="modal_middle_name" placeholder="Enter Middle Name" data-modal_middle_name>
+            </div>
+
+            <div class="form-group">
+                <label for="modal_last_name">Last Name</label>
+                <input type="text" class="form-control" id="modal_last_name" placeholder="Enter Last Name" data-modal_last_name>
+            </div>
+
+            <div class="form-group">
+                <label for="modal_dob">Date of Birth</label>
+                <input type="date" class="form-control" id="modal_dob" data-modal_dob>
+            </div>
+
+            <div class="form-group">
+                <label for="modal_department">Department</label>
+                <input type="text" class="form-control" id="modal_department" placeholder="Enter Department" data-modal_department>
+            </div>
+
+        </form>
+        </div>
+        <div class="modal-footer bg-dark">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" onclick="insert_author();">Insert</button>
+        </div>
+        </div>
+    </div>
+    </div>
+    <!-- MODAL END-->
+
+@endsection
+@section("scripts")
+<script>
+var authors = [];
+
+function submit_btn()
+{
+    let formData = new FormData();
+    formData.append("title", document.querySelector("[data-title]").value);
+    formData.append("date", document.querySelector("[data-date]").value);
+    formData.append("department", document.querySelector("[data-department]").value);
+    formData.append("type", document.querySelector("[data-type]").value);
+    formData.append("description", document.querySelector("[data-description]").value);
+    formData.append("abstract", document.querySelector("[data-abstract]").value);
+    formData.append("authors", JSON.stringify(clean_list(authors)));
+
+    fetch("{{ route('work.store') }}", {
+        method: 'POST',
+        body: formData,
+        headers: {'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value}
+    })
+    .then(response => response.json())
+    .then(results => {
+        console.log('Success:', results);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+    // window.location.href = "{{ route('work.store') }}";
+        
+}
+
+function insert_author()
+{
+    var author = {
+        "prefix":document.querySelector("[data-modal_prefix]").value
+        ,"given_name":document.querySelector("[data-modal_given_name]").value
+        ,"middle_name":document.querySelector("[data-modal_middle_name]").value
+        ,"last_name":document.querySelector("[data-modal_last_name]").value
+        ,"suffix":document.querySelector("[data-modal_suffix]").value
+        ,"dob":document.querySelector("[data-modal_dob]").value
+        ,"department":document.querySelector("[data-modal_department]").value
+    };
+
+    authors.push(author);
+
+    render_author(
+        author.prefix + " " + author.given_name
+        ,author.dob
+        ,author.department
+        ,authors.length-1   
+    );
+}
+
+function render_author(_name, _dob, _department, _index)
+{
+    var args = [_name, _dob, _department];
+    var tbody = document.querySelector("[data-authors]");
+
+    tbody.appendChild((() => {
+        var tr = document.createElement("tr");
+
+        for (var i = 0; i < args.length; i++)
+        {
+            tr.appendChild((()=>{
+            var td = document.createElement("td");
+            td.innerHTML = args[i];
+            return td;
+            })());
+        } 
+
+        tr.appendChild((()=>{
+            var td = document.createElement("td");
+            var button = document.createElement("button");
+
+            button.innerText = "x";
+            button.setAttribute("type" , "button");
+            button.setAttribute("class" , "btn btn-danger");
+            button.addEventListener("click", (event)=>{
+                remove_author(button, _index)
+                event.preventDefault(); 
+            });
+
+            td.appendChild(button);
+            return td;
+        })());
+
+        return tr;
+    })());
+}
+
+function remove_author(_button, _index)
+{
+    _button.parentElement.parentElement.remove();
+    authors[_index] = null;
+}
+
+function clean_list(_list)
+{
+    var clean_list = []
+    for(var i = 0; i < _list.length; i++)
+    {
+        if (_list[i] != null) clean_list.push(_list[i]);
+    }
+    return clean_list;
+}
+</script>
+@endsection
