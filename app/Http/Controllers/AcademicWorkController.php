@@ -37,10 +37,9 @@ class AcademicWorkController extends Controller
     {
         if (isset($_POST))
         {
-            $test = json_decode(file_get_contents('php://input'), true);
             return response(["data"=>$_POST], 200)->header('Content-Type', 'application/json');
         }
-        return response(["data"=>"No Data"], 200)->header('Content-Type', 'application/json');
+        return response(["data"=>""], 200)->header('Content-Type', 'application/json');
     }
 
     /**

@@ -6,7 +6,6 @@
 
     <div class="card bg-secondary">
 
-    <!-- <form class="card-body" method="POST" action="{{ route('work.store') }}"> -->
     <form class="card-body" action="">
     @csrf
 
@@ -47,7 +46,7 @@
     </div>
 
     <div class="form-group">
-        <label for="add_author">Open Menu For Adding Authors</label>
+        <label for="add_author">The Button Below Opens the Menu For Declaring Authors</label>
     </div>
 
     <div class="form-group">
