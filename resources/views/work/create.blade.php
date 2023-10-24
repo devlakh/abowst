@@ -26,7 +26,7 @@
 
     <div class="form-group">
         <label for="type">Type of Academic Text</label>
-        <select id="type" class="form-control" data-type>
+        <select id="type" class="form-control" data-type_of_work>
             <option value="" disabled selected>Type of Academic Text</option>
             <option value="thesis">Thesis</option>
             <option value="capstone">Capstone</option>
@@ -150,7 +150,7 @@ function submit_btn()
     formData.append("title", document.querySelector("[data-title]").value);
     formData.append("date", document.querySelector("[data-date]").value);
     formData.append("department", document.querySelector("[data-department]").value);
-    formData.append("type", document.querySelector("[data-type]").value);
+    formData.append("type_of_work", document.querySelector("[data-type_of_work]").value);
     formData.append("description", document.querySelector("[data-description]").value);
     formData.append("abstract", document.querySelector("[data-abstract]").value);
     formData.append("authors", JSON.stringify(clean_list(authors)));
