@@ -35,25 +35,11 @@ class AcademicWorkController extends Controller
      */
     public function store(Request $request)
     {
-        if (isset($_POST))
-        {
-            $academic_work = new AcademicWork();
-            // $request->input("authors")
-            //$request->all()
-
-            $academic_work->title = $request->input("title");
-            $academic_work->date = $request->input("date");
-            $academic_work->department = $request->input("department");
-            $academic_work->type_of_work = $request->input("type_of_work");
-            $academic_work->description = $request->input("description");
-            $academic_work->abstract = $request->input("abstract");
-
-            $academic_work->save();
-
-            return response(["Message"=>"Data Inserted To Database"], 200)->header('Content-Type', 'application/json');
-        }
-
-        return response(["Message"=>"No Post Request"], 200)->header('Content-Type', 'application/json');
+        $academic_work = new AcademicWork();
+        $academic_work_input = json_decode($request->all()["academic_work"], true);
+        $academic_work->insert($academic_work_input);
+        
+        return response(["Message"=>"Data Inserted To Database", "DATA"=>$academic_work_input], 200)->header('Content-Type', 'application/json');
     }
 
     /**

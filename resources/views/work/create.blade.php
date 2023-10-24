@@ -147,12 +147,14 @@ var authors = [];
 function submit_btn()
 {
     let formData = new FormData();
-    formData.append("title", document.querySelector("[data-title]").value);
-    formData.append("date", document.querySelector("[data-date]").value);
-    formData.append("department", document.querySelector("[data-department]").value);
-    formData.append("type_of_work", document.querySelector("[data-type_of_work]").value);
-    formData.append("description", document.querySelector("[data-description]").value);
-    formData.append("abstract", document.querySelector("[data-abstract]").value);
+    formData.append("academic_work", JSON.stringify({
+        "title":document.querySelector("[data-title]").value
+        ,"date":document.querySelector("[data-date]").value
+        ,"department":document.querySelector("[data-department]").value
+        ,"type_of_work":document.querySelector("[data-type_of_work]").value
+        ,"description":document.querySelector("[data-description]").value
+        ,"abstract":document.querySelector("[data-abstract]").value
+    }));
     formData.append("authors", JSON.stringify(clean_list(authors)));
 
     fetch("{{ route('work.store') }}", {
