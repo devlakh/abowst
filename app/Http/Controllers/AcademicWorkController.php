@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\AcademicWork;
+use App\Models\Author;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use PHPUnit\Runner\Exception;
+use Throwable;
 
 class AcademicWorkController extends Controller
 {
@@ -36,10 +40,26 @@ class AcademicWorkController extends Controller
     public function store(Request $request)
     {
         $academic_work = new AcademicWork();
+        $author = new Author();
+
         $academic_work_input = json_decode($request->all()["academic_work"], true);
-        $academic_work->insert($academic_work_input);
-        
-        return response(["Message"=>"Data Inserted To Database", "DATA"=>$academic_work_input], 200)->header('Content-Type', 'application/json');
+        $author_input = json_decode($request->all()["authors"], true);
+
+        try
+        {
+            \DB::beginTransaction();
+            $id = $academic_work->insertGetId($academic_work_input);
+            for($i = 0; $i < count($author_input); $i++) $author_input[$i]["academic_works_id"] = $id;
+            $author->insert($author_input);
+            \DB::commit();
+        }
+        catch(Throwable $e)
+        {
+            \DB::rollback();
+            return response(["Message"=>$e->getMessage()], 200)->header('Content-Type', 'application/json');
+        }
+
+        return response(["Message"=>"Data Inserted To Database"], 200)->header('Content-Type', 'application/json');
     }
 
     /**

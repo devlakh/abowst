@@ -182,7 +182,7 @@ function insert_author()
         ,"middle_name":document.querySelector("[data-modal_middle_name]").value
         ,"last_name":document.querySelector("[data-modal_last_name]").value
         ,"suffix":document.querySelector("[data-modal_suffix]").value
-        ,"dob":document.querySelector("[data-modal_dob]").value
+        ,"date_of_birth":document.querySelector("[data-modal_dob]").value
         ,"department":document.querySelector("[data-modal_department]").value
     };
 
