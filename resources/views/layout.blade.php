@@ -50,8 +50,8 @@
       @yield("content")
     </main>
 
-    <footer class="footer bg-secondary">
-      <div class="container">
+    <footer class="footer bg-dark">
+      <div class="container-fluid bg-secondary mt-3">
         <span class="text-muted">Place sticky footer content here.</span>
       </div>
     </footer>

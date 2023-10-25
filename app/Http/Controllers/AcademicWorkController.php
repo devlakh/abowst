@@ -18,7 +18,8 @@ class AcademicWorkController extends Controller
      */
     public function index()
     {
-        return view("work.index");
+        return view("work.index",["papers" => []]);
+        return view("work.index",["papers" => AcademicWork::all()]);
     }
 
     /**

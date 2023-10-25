@@ -4,7 +4,7 @@
 
 @section("content")
 
-    <div class="card bg-secondary">
+    <div class="card bg-secondary mt-3">
 
     <form class="card-body" action="">
     @csrf
@@ -142,6 +142,10 @@
 @endsection
 @section("scripts")
 <script>
+
+//Used for emulating DB Like Behavior
+//on author removal , authors[index] = null
+//Needed to keep index in memory in line
 var authors = [];
 
 function submit_btn()
@@ -169,11 +173,10 @@ function submit_btn()
     .catch(error => {
         console.error('Error:', error);
     });
-
-    // window.location.href = "{{ route('work.store') }}";
         
 }
 
+//Father the data from the modal
 function insert_author()
 {
     var author = {
@@ -189,13 +192,14 @@ function insert_author()
     authors.push(author);
 
     render_author(
-        author.prefix + " " + author.given_name
-        ,author.dob
+        author.prefix +" "+ author.given_name +" "+ author.middle_name +" "+ author.last_name +" "+ author.suffix
+        ,author.date_of_birth
         ,author.department
         ,authors.length-1   
     );
 }
 
+//Create tags to display the inserted author
 function render_author(_name, _dob, _department, _index)
 {
     var args = [_name, _dob, _department];
@@ -233,6 +237,8 @@ function render_author(_name, _dob, _department, _index)
     })());
 }
 
+//Emulate DB Like removal
+//Keeps the index in memory
 function remove_author(_button, _index)
 {
     _button.parentElement.parentElement.remove();
