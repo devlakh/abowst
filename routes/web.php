@@ -19,5 +19,5 @@ Route::get('/', [LandingController::class, "splash"])->name("landing.splash");
 Route::get('/about', [LandingController::class, "about"])->name("landing.about");
 Route::get('/contact', [LandingController::class, "contact"])->name("landing.contact");
 
-Route::resource("work", AcademicWorkController::class);
 Route::post('/work/grabCardsPartial', [AcademicWorkController::class, "grabCardsPartial"])->name("work.grabCardsPartial");
+Route::resource("work", AcademicWorkController::class);
