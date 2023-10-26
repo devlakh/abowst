@@ -18,8 +18,8 @@ class AcademicWorkController extends Controller
      */
     public function index()
     {
-        return view("work.index",["papers" => []]);
-        return view("work.index",["papers" => AcademicWork::all()]);
+        return view("work.index");
+        // return view("work.index",["papers" => AcademicWork::all()]);
     }
 
     /**
@@ -61,6 +61,37 @@ class AcademicWorkController extends Controller
         }
 
         return response(["Message"=>"Data Inserted To Database"], 200)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $limit
+     * @param  int  $offset
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function grabCardsPartial(Request $request)
+    {
+        try
+        {
+            $limit = $request->input("limit");
+            $offset = $request->input("offset");
+            #grab some data from academic work
+            #add them all to a dictionary
+            #go through them and find authors with the specific FK
+            #get the first author
+            #add to academic_work['author'] = the first author
+
+
+            $academic_works = AcademicWork::select("title", "date", "department", "description", "type_of_work")->limit($limit)->offset($offset)->get();
+
+            return response(["Data"=>$academic_works], 200)->header('Content-Type', 'application/json');
+        }
+        catch(Throwable $e)
+        {
+            return response(["Message"=>$e->getMessage()], 200)->header('Content-Type', 'application/json');
+        }
     }
 
     /**
