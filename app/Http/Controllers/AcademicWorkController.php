@@ -66,8 +66,6 @@ class AcademicWorkController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $limit
-     * @param  int  $offset
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
