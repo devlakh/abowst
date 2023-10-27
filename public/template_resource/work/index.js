@@ -10,7 +10,7 @@ class Index
 
         this.card_count = 0;
         this.limit = 10;
-        this.offset = 0
+        this.offset = 10;
 
         this.init();
     }
@@ -28,7 +28,6 @@ class Index
         })
         .then(response => response.json())
         .then(results => {
-            // console.log(results.Data);
             // console.log(this.collapseAuthors(results.Data));
 
             /**@type {Array.<Objects>}*/ 
@@ -62,6 +61,8 @@ class Index
      */
     renderCard(_row, _details)
     {
+        // console.log(_details);
+
         var deck = document.querySelector("[data-deck]");
 
         var card_parent = document.createElement("div");
@@ -89,22 +90,29 @@ class Index
         authors.setAttribute("class", "card-text text-muted list-unstyled");
         authors.innerHTML = _details.type_of_work.charAt(0).toUpperCase() + _details.type_of_work.substring(1) + " By";
 
+        //Go Through The Authors For Each Row
         for(let i = 0; i <= 5; i++)
         {
-            if(_details.author_name[i] === undefined)
+            
+            if(_details.authors[i] !== undefined)
+            {
+                if(i == 5) authors.innerHTML += "<li>And More</li>";
+                else if(_details.authors[i].name === null)
+                {
+                    authors.innerHTML += "<li>Anon</li>";
+                }
+                else
+                {
+                    authors.innerHTML += "<li>"+_details.authors[i].name+" from "+_details.authors[i].department+"</li>";
+                }
+                
+            }
+            else if(_details.authors[i] === undefined)
             {
                 authors.innerHTML += "<li>&nbsp</li>";
             }
-            else if(_details.author_name[i] === null)
-            {
-                authors.innerHTML += "<li>Anon</li>";
-            }
-            else
-            {
-                authors.innerHTML += "<li>"+_details.author_name[i]+"</li>";
-            }
-            
         }
+
 
         deck.appendChild(_row);
         _row.appendChild(card_parent)
@@ -151,8 +159,12 @@ class Index
             {
                 //If the current_academic_work_id is same as the selected_academic_work
                 //The author_name should now be an array
-                //Find the author_name array from the last object inserted then insert next author
-                arr[arr.length - 1].author_name.push(_objects[i].author_name)
+                //Find the authors array from the last object inserted then insert next author
+                arr[arr.length - 1].authors.push({
+                    "name":_objects[i].author_name
+                    ,"id":_objects[i].author_id
+                    ,"department":_objects[i].author_department
+                })
             }
             else
             {
@@ -160,7 +172,16 @@ class Index
                 current_academic_work_id = _objects[i].academic_work_id;
 
                 //Convert the author_name from a string to an array
-                _objects[i].author_name = [_objects[i].author_name];
+                _objects[i].authors = [{
+                    "name":_objects[i].author_name
+                    ,"id":_objects[i].author_id
+                    ,"department":_objects[i].author_department
+                }];
+
+                //Remove Other Author Keys
+                delete _objects[i].author_name
+                delete _objects[i].author_id
+                delete _objects[i].author_department
 
                 //Insert object into the new array with converted author_name[]
                 arr.push(_objects[i]);
