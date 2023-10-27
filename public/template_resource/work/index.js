@@ -9,8 +9,8 @@ class Index
         this.links = _links;
 
         this.card_count = 0;
-        this.limit = 10;
-        this.offset = 10;
+        this.limit = 20;
+        this.offset = 0;
 
         this.init();
     }
