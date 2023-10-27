@@ -8,29 +8,16 @@
 
     <a class="nav-link" href="{{ route('work.create') }}">Add Academic Works</a>
 
+    <div data-deck>
+
+    </div>
 @endsection
 
 @section("scripts")
+<script src="{{ url('template_resource/work/index.js') }}"></script>
 <script>
-(()=>{
-
-    let formData = new FormData();
-    formData.append("limit", 3);
-    formData.append("offset", 7);
-
-    fetch("{{ route('work.grabCardsPartial') }}", {
-        method: 'POST',
-        body: formData,
-        headers: {'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value}
-    })
-    .then(response => response.json())
-    .then(results => {
-        console.log('Success:', results);
-    })
-    .catch(error => {
-        console.error('Error:', error);
+    var index = new Index({
+        "grabCardsPartial":"{{ route('work.grabCardsPartial') }}"
     });
-
-})();
 </script>
 @endsection

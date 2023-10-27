@@ -87,18 +87,13 @@ class AcademicWorkController extends Controller
                         ,aw.description
                         ,aw.type_of_work
                         ,authors.id AS author_id
-                        ,authors.prefix
-                        ,authors.given_name
-                        ,authors.middle_name
-                        ,authors.last_name
-                        ,authors.suffix
+                        ,CONCAT(authors.prefix,' ',authors.given_name,' ',authors.middle_name,' ',authors.last_name,' ',authors.suffix) AS author_name
                         ,authors.department AS author_department
                     FROM" 
                     .
                     "(SELECT * FROM academic_works LIMIT {$limit} OFFSET {$offset}) AS aw LEFT JOIN authors ON aw.id = authors.academic_works_id"
                 )
             );
-
 
             return response(["Data"=>$academic_works], 200)->header('Content-Type', 'application/json');
         }

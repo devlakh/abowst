@@ -3,12 +3,11 @@
 @section("title", "Academic Works:Create Entry")
 
 @section("content")
-
+    @csrf
     <div class="card bg-secondary mt-3">
 
     <form class="card-body" action="">
-    @csrf
-
+    
     <div class="form-group">
         <label for="title">Title</label>
         <input type="text" class="form-control" id="title" placeholder="Enter Academic Title" data-title>

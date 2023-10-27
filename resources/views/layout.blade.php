@@ -48,6 +48,7 @@
     <!-- Begin page content -->
     <main role="main" class="container">
       @yield("content")
+      @yield("scripts")
     </main>
 
     <footer class="footer bg-dark">
@@ -62,7 +63,5 @@
     <script src="{{ url('template_resource/jquery-3.2.1.slim.min.js') }}"></script>
     <script src="{{ url('template_resource/popper.min.js') }}"></script>
     <script src="{{ url('template_resource/bootstrap.min.js') }}"></script>
-  
-    @yield("scripts")
 
 </body></html>
