@@ -16,7 +16,7 @@
 
     let formData = new FormData();
     formData.append("limit", 3);
-    formData.append("offset", 0);
+    formData.append("offset", 7);
 
     fetch("{{ route('work.grabCardsPartial') }}", {
         method: 'POST',

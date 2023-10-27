@@ -7,6 +7,7 @@ use App\Models\Author;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PHPUnit\Runner\Exception;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class AcademicWorkController extends Controller
@@ -48,15 +49,15 @@ class AcademicWorkController extends Controller
 
         try
         {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             $id = $academic_work->insertGetId($academic_work_input);
             for($i = 0; $i < count($author_input); $i++) $author_input[$i]["academic_works_id"] = $id;
             $author->insert($author_input);
-            \DB::commit();
+            DB::commit();
         }
         catch(Throwable $e)
         {
-            \DB::rollback();
+            DB::rollback();
             return response(["Message"=>$e->getMessage()], 200)->header('Content-Type', 'application/json');
         }
 
@@ -75,14 +76,29 @@ class AcademicWorkController extends Controller
         {
             $limit = $request->input("limit");
             $offset = $request->input("offset");
-            #grab some data from academic work
-            #add them all to a dictionary
-            #go through them and find authors with the specific FK
-            #get the first author
-            #add to academic_work['author'] = the first author
 
+            $academic_works = DB::select(
+                DB::raw(
+                    "SELECT 
+                        aw.id AS academic_work_id
+                        ,aw.title
+                        ,aw.date
+                        ,aw.department AS academic_work_department
+                        ,aw.description
+                        ,aw.type_of_work
+                        ,authors.id AS author_id
+                        ,authors.prefix
+                        ,authors.given_name
+                        ,authors.middle_name
+                        ,authors.last_name
+                        ,authors.suffix
+                        ,authors.department AS author_department
+                    FROM" 
+                    .
+                    "(SELECT * FROM academic_works LIMIT {$limit} OFFSET {$offset}) AS aw LEFT JOIN authors ON aw.id = authors.academic_works_id"
+                )
+            );
 
-            $academic_works = AcademicWork::select("title", "date", "department", "description", "type_of_work")->limit($limit)->offset($offset)->get();
 
             return response(["Data"=>$academic_works], 200)->header('Content-Type', 'application/json');
         }
