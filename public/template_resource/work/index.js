@@ -1,5 +1,6 @@
 class Index
 {
+    /**@TODO add load more */
     constructor(_links)
     {
         /**
@@ -17,7 +18,7 @@ class Index
 
     init()
     {
-        var formData = new FormData();
+        let formData = new FormData();
         formData.append("limit", this.limit);
         formData.append("offset", this.offset);
 
@@ -38,13 +39,13 @@ class Index
     fillDeck(_results)
     {
         /**@type {Array.<Objects>}*/ 
-        var data = this.collapseAuthors(_results.Data)
+        let data = this.collapseAuthors(_results.Data)
 
         /**@type {HTMLElement}*/ 
-        var card_row = document.querySelector("[data-initial_row]");
+        let card_row = document.querySelector("[data-initial_row]");
 
         //Go Through all the card details
-        for(var i = 0; i < data.length; i++)
+        for(let i = 0; i < data.length; i++)
         {
             //Start Counting Cards
             this.card_count++;
@@ -54,6 +55,27 @@ class Index
 
             //Render The Card
             this.renderCard(card_row, data[i]);
+        }
+        
+        /**
+         * @TODO deal with load more
+         */
+        if (this.card_count % 2 == 0)
+        {
+            let deck = document.querySelector("[data-deck]");
+            let row = this.createCardRow();
+            let card = document.querySelector("[data-last_card]");
+            document.querySelector("[data-last_card]").remove();
+
+            row.appendChild(card);
+            deck.appendChild(row);
+        }
+        else
+        {
+            let card = document.querySelector("[data-last_card]");
+            document.querySelector("[data-last_card]").remove();
+
+            card_row.appendChild(card);
         }
     }
 
@@ -66,30 +88,30 @@ class Index
      */
     renderCard(_row, _details)
     {
-        var deck = document.querySelector("[data-deck]");
+        let deck = document.querySelector("[data-deck]");
 
-        var card_parent = document.createElement("div");
+        let card_parent = document.createElement("div");
         card_parent.setAttribute("class", "col-sm-6 mt-3");
         
-        var card = document.createElement("div");
+        let card = document.createElement("div");
         card.setAttribute("class", "card bg-secondary h-100");
     
-        var card_body = document.createElement("div");
+        let card_body = document.createElement("div");
         card_body.setAttribute("class", "card-body");
     
-        var title = document.createElement("h5");
+        let title = document.createElement("h5");
         title.setAttribute("class", "card-title");
         title.innerHTML = _details.title;
 
-        var academic_work_department = document.createElement("p");
+        let academic_work_department = document.createElement("p");
         academic_work_department.setAttribute("class", "card-text text-muted");
         academic_work_department.innerHTML = "From " + _details.academic_work_department;
 
-        var description = document.createElement("p");
+        let description = document.createElement("p");
         description.setAttribute("class", "card-text");
         description.innerHTML = _details.description;
 
-        var authors = document.createElement("ul");
+        let authors = document.createElement("ul");
         authors.setAttribute("class", "card-text text-muted list-unstyled");
         authors.innerHTML = _details.type_of_work.charAt(0).toUpperCase() + _details.type_of_work.substring(1) + " By";
 
@@ -132,7 +154,7 @@ class Index
      */
     createCardRow()
     {
-        var card_row = document.createElement("div");
+        let card_row = document.createElement("div");
         card_row.setAttribute("class", "row");
 
         return card_row;
@@ -149,9 +171,9 @@ class Index
      */
     collapseAuthors(_objects)
     {
-        var arr = [];
+        let arr = [];
+        let current_academic_work_id;
 
-        var current_academic_work_id;
         for(let i = 0; i < _objects.length; i++)
         {
             //Check if the selected academic work is same with the last listed academic work

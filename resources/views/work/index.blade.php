@@ -6,8 +6,6 @@
     @csrf
     <h1> Academic Works Page </h1>
 
-    <!-- <a class="nav-link" href="{{ route('work.create') }}">Add Academic Works</a> -->
-
     <div data-deck>
         <div class="row" data-initial_row>
 
@@ -16,6 +14,16 @@
                     <div class="card-body">
                         <h5 class="card-title"><a class="nav-link p-0 mb-3" href="{{ route('work.create') }}">New Entry +</a></h5>
                         <p class="card-text text-muted">Click "New Entry +" above to add an entry</p>
+                        <p class="card-text">You are currently Looking at some of the latest entry made.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 mt-3" data-last_card>
+                <div class="card border-warning bg-secondary h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><a class="nav-link p-0 mb-3" href="">Show More Entries</a></h5>
+                        <p class="card-text text-muted">Loads Additional Entries</p>
                         <p class="card-text">You are currently Looking at some of the latest entry made.</p>
                     </div>
                 </div>
