@@ -44,8 +44,8 @@ class AcademicWorkController extends Controller
         $academic_work = new AcademicWork();
         $author = new Author();
 
-        $academic_work_input = json_decode($request->all()["academic_work"], true);
-        $author_input = json_decode($request->all()["authors"], true);
+        $academic_work_input = json_decode($request->input("academic_work"), true);
+        $author_input = json_decode($request->input("authors"), true);
 
         try
         {
@@ -72,35 +72,12 @@ class AcademicWorkController extends Controller
      */
     public function grabCardsPartial(Request $request)
     {
-        try
-        {
-            $limit = $request->input("limit");
-            $offset = $request->input("offset");
+        $academic_work = new AcademicWork();
 
-            $academic_works = DB::select(
-                DB::raw(
-                    "SELECT 
-                        aw.id AS academic_work_id
-                        ,aw.title
-                        ,aw.date
-                        ,aw.department AS academic_work_department
-                        ,aw.description
-                        ,aw.type_of_work
-                        ,authors.id AS author_id
-                        ,CONCAT(authors.prefix,' ',authors.given_name,' ',authors.middle_name,' ',authors.last_name,' ',authors.suffix) AS author_name
-                        ,authors.department AS author_department
-                    FROM" 
-                    .
-                    "(SELECT * FROM academic_works LIMIT {$limit} OFFSET {$offset}) AS aw LEFT JOIN authors ON aw.id = authors.academic_works_id"
-                )
-            );
+        $limit = $request->input("limit");
+        $offset = $request->input("offset");
 
-            return response(["Data"=>$academic_works], 200)->header('Content-Type', 'application/json');
-        }
-        catch(Throwable $e)
-        {
-            return response(["Message"=>$e->getMessage()], 200)->header('Content-Type', 'application/json');
-        }
+        return $academic_work->grabCardsPartial($limit, $offset);
     }
 
     /**

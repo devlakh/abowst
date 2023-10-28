@@ -28,7 +28,7 @@ class Index
         })
         .then(response => response.json())
         .then(results => {
-            // console.log(this.collapseAuthors(results.Data));
+            // console.log(results.test);
 
             /**@type {Array.<Objects>}*/ 
             var data = this.collapseAuthors(results.Data)
@@ -52,6 +52,7 @@ class Index
             console.error('Error:', error);
         });
     }
+
 
     /**
      * Display A Card.
@@ -113,7 +114,6 @@ class Index
             }
         }
 
-
         deck.appendChild(_row);
         _row.appendChild(card_parent)
         card_parent.appendChild(card);
@@ -125,6 +125,7 @@ class Index
         card_body.appendChild(description);
         card_body.appendChild(authors);
     }
+
 
     /**
      * Create a row for the Cards.
@@ -139,6 +140,7 @@ class Index
         return card_row;
     }
 
+    
     /**
      * Collapses Multiple authors with 
      * the same work into an array
