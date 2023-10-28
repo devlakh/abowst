@@ -8,8 +8,8 @@ class Index
          */ 
         this.links = _links;
 
-        this.card_count = 0;
-        this.limit = 20;
+        this.card_count = 1;
+        this.limit = 5;
         this.offset = 0;
 
         this.init();
@@ -28,29 +28,33 @@ class Index
         })
         .then(response => response.json())
         .then(results => {
-            // console.log(results.test);
-
-            /**@type {Array.<Objects>}*/ 
-            var data = this.collapseAuthors(results.Data)
-
-            /**@type {HTMLElement}*/ 
-            var card_row;
-
-            for(var i = 0; i < data.length; i++)
-            {
-                //Start Counting Cards
-                this.card_count++;
-
-                //Check If New Card Needs a New Row
-                if(this.card_count % 2 != 0) card_row = this.createCardRow();
-
-                //Render The Card
-                this.renderCard(card_row, data[i]);
-            }
+            this.fillDeck(results);
         })
         .catch(error => {
             console.error('Error:', error);
         });
+    }
+
+    fillDeck(_results)
+    {
+        /**@type {Array.<Objects>}*/ 
+        var data = this.collapseAuthors(_results.Data)
+
+        /**@type {HTMLElement}*/ 
+        var card_row = document.querySelector("[data-initial_row]");
+
+        //Go Through all the card details
+        for(var i = 0; i < data.length; i++)
+        {
+            //Start Counting Cards
+            this.card_count++;
+
+            //Check If New Card Needs a New Row
+            if(this.card_count % 2 != 0) card_row = this.createCardRow();
+
+            //Render The Card
+            this.renderCard(card_row, data[i]);
+        }
     }
 
 
@@ -62,15 +66,13 @@ class Index
      */
     renderCard(_row, _details)
     {
-        // console.log(_details);
-
         var deck = document.querySelector("[data-deck]");
 
         var card_parent = document.createElement("div");
         card_parent.setAttribute("class", "col-sm-6 mt-3");
         
         var card = document.createElement("div");
-        card.setAttribute("class", "card bg-secondary");
+        card.setAttribute("class", "card bg-secondary h-100");
     
         var card_body = document.createElement("div");
         card_body.setAttribute("class", "card-body");
@@ -91,7 +93,7 @@ class Index
         authors.setAttribute("class", "card-text text-muted list-unstyled");
         authors.innerHTML = _details.type_of_work.charAt(0).toUpperCase() + _details.type_of_work.substring(1) + " By";
 
-        //Go Through The Authors For Each Row
+        //Go Through The Authors For Each Row / Academic Work
         for(let i = 0; i <= 5; i++)
         {
             
@@ -107,10 +109,6 @@ class Index
                     authors.innerHTML += "<li>"+_details.authors[i].name+" from "+_details.authors[i].department+"</li>";
                 }
                 
-            }
-            else if(_details.authors[i] === undefined)
-            {
-                authors.innerHTML += "<li>&nbsp</li>";
             }
         }
 

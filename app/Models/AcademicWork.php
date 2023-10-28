@@ -42,7 +42,7 @@ class AcademicWork extends Model
                         ,authors.department AS author_department
                     FROM" 
                     .
-                    "(SELECT * FROM academic_works LIMIT {$limit} OFFSET {$offset}) AS aw LEFT JOIN authors ON aw.id = authors.academic_works_id"
+                    "(SELECT * FROM academic_works ORDER BY academic_works.id DESC LIMIT {$limit} OFFSET {$offset}) AS aw LEFT JOIN authors ON aw.id = authors.academic_works_id"
                 )
             );
 
