@@ -49,7 +49,7 @@
     </div>
 
     <div class="form-group">
-        <button id="add_author" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+        <button id="add_author" type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModalCenter">
             Add Author
         </button>
     </div>
@@ -69,7 +69,7 @@
         </table>
     </div>
 
-    <button type="button" class="btn btn-primary" onclick="submit_btn();">Submit</button>
+    <button type="button" class="btn btn-success" onclick="submit_btn();">Submit</button>
 
     </form>
     
@@ -130,8 +130,8 @@
         </form>
         </div>
         <div class="modal-footer bg-dark">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" onclick="insert_author();">Insert</button>
+            <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-warning" onclick="insert_author();">Insert</button>
         </div>
         </div>
     </div>

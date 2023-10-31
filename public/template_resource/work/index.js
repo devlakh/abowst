@@ -1,5 +1,9 @@
 class Index
 {
+    /**
+     * 
+     * @TODO - Modal For More Details 
+     */
     constructor(_links)
     {
         /**
@@ -7,7 +11,7 @@ class Index
          * @type {Dictionary}
          */ 
         this.links = _links;
-        this.limit = 2;
+        this.limit = 5;
         this.offset = 0;
 
         this.pullCards();
@@ -84,34 +88,44 @@ class Index
      */
     renderCard(_details)
     {
+        //Gather Elements
         let deck = document.querySelector("[data-deck]");
 
+        //Create Elements
         let card_parent = document.createElement("div");
-        card_parent.setAttribute("class", "col-sm-6 mt-3");
-        
         let card = document.createElement("div");
-        card.setAttribute("class", "card bg-secondary h-100");
-    
+
         let card_body = document.createElement("div");
-        card_body.setAttribute("class", "card-body");
-    
         let title = document.createElement("h5");
-        title.setAttribute("class", "card-title");
-        title.innerHTML = _details.title;
-
         let academic_work_department = document.createElement("p");
-        academic_work_department.setAttribute("class", "card-text text-muted");
-        academic_work_department.innerHTML = "From " + _details.academic_work_department;
-
         let description = document.createElement("p");
-        description.setAttribute("class", "card-text");
-        description.innerHTML = _details.description;
-
         let authors = document.createElement("ul");
+
+        let footer = document.createElement("div");
+        let more_details_btn = document.createElement("button");
+
+        //Set Attributes
+        card_parent.setAttribute("class", "col-sm-6 mt-3");
+        card.setAttribute("class", "card bg-secondary h-100");
+
+        card_body.setAttribute("class", "card-body");
+        title.setAttribute("class", "card-title");
+        academic_work_department.setAttribute("class", "card-text text-muted");
+        description.setAttribute("class", "card-text");
         authors.setAttribute("class", "card-text text-muted list-unstyled");
+
+        footer.setAttribute("class", "card-footer p-0");
+        more_details_btn.setAttribute("class", "btn btn-outline-light btn-lg btn-block");
+
+        //Set Details
+        title.innerHTML = _details.title;
+        academic_work_department.innerHTML = "From " + _details.academic_work_department;
+        description.innerHTML = _details.description;
         authors.innerHTML = _details.type_of_work.charAt(0).toUpperCase() + _details.type_of_work.substring(1) + " By";
 
-        //Go Through The Authors For Each Row / Academic Work
+        more_details_btn.innerHTML = "More Details";
+
+        //  Go Through The Authors For Each Row / Academic Work
         for(let i = 0; i <= 5; i++)
         {
             
@@ -130,15 +144,23 @@ class Index
             }
         }
 
+        //Add Listeners
+        more_details_btn.addEventListener("click", ()=>{
+            console.log(_details.academic_work_id);
+        });
+
+        //Append Elements
         deck.appendChild(card_parent);
         card_parent.appendChild(card);
-        card.appendChild(card_body);
 
-        // Card Details
+        card.appendChild(card_body);
         card_body.appendChild(title);
         card_body.appendChild(academic_work_department);
         card_body.appendChild(description);
         card_body.appendChild(authors);
+
+        card.appendChild(footer);
+        footer.appendChild(more_details_btn);
     }
     
     /**

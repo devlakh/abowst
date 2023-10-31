@@ -9,27 +9,27 @@
     <div class="row" data-deck>
     <!-- text-center -->
         <div class="col-sm-6 mt-3">
-            <div class="card border-success bg-secondary h-100 text-center">
+            <div class="card bg-secondary h-100 text-center">
                 <div class="card-body">
                     <h5 class="card-title">Create New Entry</h5>
                     <p class="card-text text-muted">Click "Create New Entry" below to add an entry</p>
                     <h5 class="card-text">You are currently Looking at some of the latest entry made.</h5>
                 </div>
-                <div class="card-footer text-muted p-0">
-                    <a href="{{ route('work.create') }}" class="btn btn-success btn-lg btn-block" role="button">Create New Entry</a>
+                <div class="card-footer p-0">
+                    <a href="{{ route('work.create') }}" class="btn btn-outline-success btn-lg btn-block" role="button">Create New Entry</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-6 mt-3" data-last_card>
-            <div class="card border-warning bg-secondary h-100 text-center">
+            <div class="card bg-secondary h-100 text-center">
                 <div class="card-body">
                     <h5 class="card-title">Load More Entry</h5>
-                    <p class="card-text text-muted">Click "Load More" below to add an entry</p>
+                    <p class="card-text text-muted">Click "Load More" below to reveal more entries</p>
                     <p class="card-text text-warning" data-last_card_message>message</p>
                 </div>
-                <div class="card-footer text-muted p-0">
-                    <button type="button" class="btn btn-warning btn-lg btn-block" data-load_more_btn>Load More</button>
+                <div class="card-footer p-0">
+                    <button type="button" class="btn btn-outline-warning btn-lg btn-block" data-load_more_btn>Load More</button>
                 </div>
             </div>
         </div>
