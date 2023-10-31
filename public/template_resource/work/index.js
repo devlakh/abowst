@@ -1,6 +1,5 @@
 class Index
 {
-    /**@TODO add load more */
     constructor(_links)
     {
         /**
@@ -8,15 +7,17 @@ class Index
          * @type {Dictionary}
          */ 
         this.links = _links;
-
-        this.card_count = 1;
-        this.limit = 5;
+        this.limit = 2;
         this.offset = 0;
 
-        this.init();
+        this.pullCards();
     }
 
-    init()
+    /**
+     * Gather Data For The Cards In The Deck.
+     *
+     */
+    pullCards()
     {
         let formData = new FormData();
         formData.append("limit", this.limit);
@@ -29,64 +30,59 @@ class Index
         })
         .then(response => response.json())
         .then(results => {
-            this.fillDeck(results);
+
+            let last_card_message = document.querySelector("[data-last_card_message]");
+
+            if(results.Data.length != 0)
+            {
+                this.fillDeck(this.collapseAuthors(results.Data));
+                this.offset += this.limit;
+                
+                last_card_message.innerHTML = "New Data Has Been Loaded";
+                last_card_message.setAttribute("class", "card-text text-info")
+
+            }
+            else
+            {
+                last_card_message.innerHTML = "No Additional Data";
+                last_card_message.setAttribute("class", "card-text text-warning")
+            }
         })
         .catch(error => {
             console.error('Error:', error);
         });
     }
 
+    /**
+     * Display A Card.
+     *
+     * @param {dictionary} _results - an array with collapsed authors
+     */
     fillDeck(_results)
     {
-        /**@type {Array.<Objects>}*/ 
-        let data = this.collapseAuthors(_results.Data)
-
-        /**@type {HTMLElement}*/ 
-        let card_row = document.querySelector("[data-initial_row]");
-
         //Go Through all the card details
-        for(let i = 0; i < data.length; i++)
+        for(let i = 0; i < _results.length; i++)
         {
             //Start Counting Cards
             this.card_count++;
 
-            //Check If New Card Needs a New Row
-            if(this.card_count % 2 != 0) card_row = this.createCardRow();
-
             //Render The Card
-            this.renderCard(card_row, data[i]);
+            this.renderCard(_results[i]);
         }
         
-        /**
-         * @TODO deal with load more
-         */
-        if (this.card_count % 2 == 0)
-        {
-            let deck = document.querySelector("[data-deck]");
-            let row = this.createCardRow();
-            let card = document.querySelector("[data-last_card]");
-            document.querySelector("[data-last_card]").remove();
+        let deck = document.querySelector("[data-deck]");
+        let card = document.querySelector("[data-last_card]");
+        document.querySelector("[data-last_card]").remove();
 
-            row.appendChild(card);
-            deck.appendChild(row);
-        }
-        else
-        {
-            let card = document.querySelector("[data-last_card]");
-            document.querySelector("[data-last_card]").remove();
-
-            card_row.appendChild(card);
-        }
+        deck.appendChild(card);
     }
-
 
     /**
      * Display A Card.
      *
-     * @param {HTMLElement} _row - Number of Cards In The Deck
      * @param {dictionary} _details - Card Details
      */
-    renderCard(_row, _details)
+    renderCard(_details)
     {
         let deck = document.querySelector("[data-deck]");
 
@@ -134,8 +130,7 @@ class Index
             }
         }
 
-        deck.appendChild(_row);
-        _row.appendChild(card_parent)
+        deck.appendChild(card_parent);
         card_parent.appendChild(card);
         card.appendChild(card_body);
 
@@ -145,21 +140,6 @@ class Index
         card_body.appendChild(description);
         card_body.appendChild(authors);
     }
-
-
-    /**
-     * Create a row for the Cards.
-     *
-     * @return {HTMLElement} - Row for cards
-     */
-    createCardRow()
-    {
-        let card_row = document.createElement("div");
-        card_row.setAttribute("class", "row");
-
-        return card_row;
-    }
-
     
     /**
      * Collapses Multiple authors with 

@@ -6,30 +6,34 @@
     @csrf
     <h1> Academic Works Page </h1>
 
-    <div data-deck>
-        <div class="row" data-initial_row>
-
-            <div class="col-sm-6 mt-3">
-                <div class="card border-light bg-secondary h-100">
-                    <div class="card-body">
-                        <h5 class="card-title"><a class="nav-link p-0 mb-3" href="{{ route('work.create') }}">New Entry +</a></h5>
-                        <p class="card-text text-muted">Click "New Entry +" above to add an entry</p>
-                        <p class="card-text">You are currently Looking at some of the latest entry made.</p>
-                    </div>
+    <div class="row" data-deck>
+    <!-- text-center -->
+        <div class="col-sm-6 mt-3">
+            <div class="card border-success bg-secondary h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Create New Entry</h5>
+                    <p class="card-text text-muted">Click "Create New Entry" below to add an entry</p>
+                    <h5 class="card-text">You are currently Looking at some of the latest entry made.</h5>
+                </div>
+                <div class="card-footer text-muted p-0">
+                    <a href="{{ route('work.create') }}" class="btn btn-success btn-lg btn-block" role="button">Create New Entry</a>
                 </div>
             </div>
-
-            <div class="col-sm-6 mt-3" data-last_card>
-                <div class="card border-warning bg-secondary h-100">
-                    <div class="card-body">
-                        <h5 class="card-title"><a class="nav-link p-0 mb-3" href="">Show More Entries</a></h5>
-                        <p class="card-text text-muted">Loads Additional Entries</p>
-                        <p class="card-text">You are currently Looking at some of the latest entry made.</p>
-                    </div>
-                </div>
-            </div>
-            
         </div>
+
+        <div class="col-sm-6 mt-3" data-last_card>
+            <div class="card border-warning bg-secondary h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Load More Entry</h5>
+                    <p class="card-text text-muted">Click "Load More" below to add an entry</p>
+                    <p class="card-text text-warning" data-last_card_message>message</p>
+                </div>
+                <div class="card-footer text-muted p-0">
+                    <button type="button" class="btn btn-warning btn-lg btn-block" data-load_more_btn>Load More</button>
+                </div>
+            </div>
+        </div>
+            
     </div>
 @endsection
 
@@ -37,7 +41,11 @@
 <script src="{{ url('template_resource/work/index.js') }}"></script>
 <script>
     var index = new Index({
-        "grabCardsPartial":"{{ route('work.grabCardsPartial') }}"
+        "grabCardsPartial":"{{ route('work.grabCardsPartial') }}" 
+    });
+
+    document.querySelector("[data-load_more_btn]").addEventListener("click", (event)=>{
+        index.pullCards();
     });
 </script>
 @endsection

@@ -46,10 +46,10 @@ class AcademicWork extends Model
                 )
             );
 
-            // for($i = 0; $i < count($academic_works); $i++)
-            // {
-            //     $academic_works[$i]->academic_work_id = blur($academic_works[$i]->academic_work_id);
-            // }
+            for($i = 0; $i < count($academic_works); $i++)
+            {
+                $academic_works[$i]->academic_work_id = blur($academic_works[$i]->academic_work_id);
+            }
             return response(["Data"=>$academic_works], 200)->header('Content-Type', 'application/json');
         }
         catch(Throwable $e)
