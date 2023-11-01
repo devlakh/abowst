@@ -26,7 +26,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Load More Entry</h5>
                     <p class="card-text text-muted">Click "Load More" below to reveal more entries</p>
-                    <p class="card-text text-warning" data-last_card_message>message</p>
+                    <p class="card-text text-info" data-last_card_message>Loading Data</p>
                 </div>
                 <div class="card-footer p-0">
                     <button type="button" class="btn btn-outline-warning btn-lg btn-block" data-load_more_btn>Load More</button>
@@ -36,7 +36,6 @@
             
     </div>
 @endsection
-
 @section("scripts")
 <script src="{{ url('template_resource/work/index.js') }}"></script>
 <script>

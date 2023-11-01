@@ -58,10 +58,10 @@ class AcademicWorkController extends Controller
         catch(Throwable $e)
         {
             DB::rollback();
-            return response(["Message"=>$e->getMessage()], 200)->header('Content-Type', 'application/json');
+            return response(["message"=>$e->getMessage()], 200)->header('Content-Type', 'application/json');
         }
 
-        return response(["Message"=>"Data Inserted To Database"], 200)->header('Content-Type', 'application/json');
+        return response(["message"=>"Data Inserted To Database"], 200)->header('Content-Type', 'application/json');
     }
 
     /**

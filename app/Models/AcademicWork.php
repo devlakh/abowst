@@ -16,9 +16,8 @@ class AcademicWork extends Model
         return $this->hasMany("App\Author");
     }
 
-
     /**
-     * Get Partial Information From DB for the cards
+     * Get Partial 2 Information From DB for the cards
      *
      * @param $limit {integer}
      * @param $offset {integer}
@@ -30,31 +29,55 @@ class AcademicWork extends Model
         {
             $academic_works = DB::select(
                 DB::raw(
-                    "SELECT 
-                        aw.id AS academic_work_id
-                        ,aw.title
-                        ,aw.date
-                        ,aw.department AS academic_work_department
-                        ,aw.description
-                        ,aw.type_of_work
-                        ,authors.id AS author_id
-                        ,CONCAT(authors.prefix,' ',authors.given_name,' ',authors.middle_name,' ',authors.last_name,' ',authors.suffix) AS author_name
-                        ,authors.department AS author_department
-                    FROM" 
-                    .
-                    "(SELECT * FROM academic_works ORDER BY academic_works.id DESC LIMIT {$limit} OFFSET {$offset}) AS aw LEFT JOIN authors ON aw.id = authors.academic_works_id"
+                    "SELECT
+                    aw.id
+                    ,aw.title
+                    ,aw.date
+                    ,aw.department
+                    ,aw.description
+                    ,aw.type_of_work
+                    ,authors_temp.collapsed_authors
+                    FROM academic_works AS aw
+                    LEFT JOIN(
+                        SELECT 
+                        authors.academic_works_id, 
+                        GROUP_CONCAT(
+                            JSON_OBJECT(
+                                'name',CONCAT(authors.prefix,' ',authors.given_name,' ',authors.middle_name,' ',authors.last_name,' ',authors.suffix)
+                                ,'department',authors.department
+                            ) 
+                            SEPARATOR '\0'
+                        )AS collapsed_authors 
+                        FROM authors 
+                        GROUP BY authors.academic_works_id
+                    )AS authors_temp 
+                    ON authors_temp.academic_works_id = aw.id
+                    ORDER BY aw.id 
+                    DESC 
+                    LIMIT {$limit} 
+                    OFFSET {$offset}"
                 )
             );
+            
+            //Convert Collapsed Authors String into array
+            for($academic_works_index = 0; $academic_works_index < count($academic_works); $academic_works_index++)
+            {   
+                //Strings are separated by null
+                //Store Collapsed Authors String into the same dict:key
+                $academic_works[$academic_works_index]->collapsed_authors = explode("\0",$academic_works[$academic_works_index]->collapsed_authors);
 
-            for($i = 0; $i < count($academic_works); $i++)
-            {
-                $academic_works[$i]->academic_work_id = blur($academic_works[$i]->academic_work_id);
+                //Convert The Collapsed Authors String into JSON or a Dictionary
+                for($authors_index = 0; $authors_index < count($academic_works[$academic_works_index]->collapsed_authors); $authors_index++)
+                {
+                    $academic_works[$academic_works_index]->collapsed_authors[$authors_index] = json_decode($academic_works[$academic_works_index]->collapsed_authors[$authors_index]);
+                }
             }
-            return response(["Data"=>$academic_works], 200)->header('Content-Type', 'application/json');
+
+            return response(["message"=>"OK", "data"=>$academic_works], 200);
         }
         catch(Throwable $e)
         {
-            return response(["Message"=>$e->getMessage()], 200)->header('Content-Type', 'application/json');
+            return response(["message"=>$e->getMessage()], 200)->header('Content-Type', 'application/json');
         }
     }
 }
