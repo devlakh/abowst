@@ -141,11 +141,10 @@
 @endsection
 @section("scripts")
 <script>
-
 //Used for emulating DB Like Behavior
 //on author removal , authors[index] = null
 //Needed to keep index in memory in line
-var authors = [];
+let authors = [];
 
 function submit_btn()
 {
@@ -178,7 +177,7 @@ function submit_btn()
 //Father the data from the modal
 function insert_author()
 {
-    var author = {
+    let author = {
         "prefix":document.querySelector("[data-modal_prefix]").value
         ,"given_name":document.querySelector("[data-modal_given_name]").value
         ,"middle_name":document.querySelector("[data-modal_middle_name]").value
@@ -187,6 +186,8 @@ function insert_author()
         ,"date_of_birth":document.querySelector("[data-modal_dob]").value
         ,"department":document.querySelector("[data-modal_department]").value
     };
+
+    console.log(document.querySelector("[data-modal_dob]").value);
 
     authors.push(author);
 

@@ -88,7 +88,7 @@ class AcademicWorkController extends Controller
      */
     public function show($id)
     {
-        //
+        return view("work.show", ["id"=>$id]);
     }
 
     /**

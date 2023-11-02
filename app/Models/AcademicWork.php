@@ -59,12 +59,15 @@ class AcademicWork extends Model
                 )
             );
             
-            //Convert Collapsed Authors String into array
             for($academic_works_index = 0; $academic_works_index < count($academic_works); $academic_works_index++)
             {   
-                //Strings are separated by null
+                //Convert Collapsed Authors String
+                //Split at separator null
                 //Store Collapsed Authors String into the same dict:key
                 $academic_works[$academic_works_index]->collapsed_authors = explode("\0",$academic_works[$academic_works_index]->collapsed_authors);
+
+                //Blur ID
+                $academic_works[$academic_works_index]->id = blur($academic_works[$academic_works_index]->id);
 
                 //Convert The Collapsed Authors String into JSON or a Dictionary
                 for($authors_index = 0; $authors_index < count($academic_works[$academic_works_index]->collapsed_authors); $authors_index++)
