@@ -91,7 +91,35 @@ class AcademicWorkController extends Controller
         $academic_work = new AcademicWork();
 
         $data = $academic_work->grabMoreDetails($id);
-        // return $data;
+
+        //Check if type of work starts with vowels then prefix with an or a
+        if(preg_match('/^[aeiou]/i', $data->type_of_work)) $data->type_of_work = "An " . ucfirst($data->type_of_work);
+        else $data->type_of_work = "A " . ucfirst($data->type_of_work);
+
+        $data->department = ucfirst($data->department);
+
+        $exploded_date = explode("-",$data->date);
+        $data->date = date('F', mktime(0, 0, 0, $exploded_date[1], 10)) . " " .$exploded_date[2] . ", " . $exploded_date[0];
+
+        for($i = 0; $i < count($data->collapsed_authors); $i++)
+        {
+            if(strlen(trim($data->collapsed_authors[$i]->name)) == 0 or $data->collapsed_authors[$i]->name == null)
+            {
+                $data->collapsed_authors[$i]->name = "Anon";
+            }
+
+            if(strlen(trim($data->collapsed_authors[$i]->dob)) == 0 or $data->collapsed_authors[$i]->dob == null)
+            {
+                $data->collapsed_authors[$i]->dob = "At Some Moment In Time";
+            }
+
+            if(strlen(trim($data->collapsed_authors[$i]->department)) == 0 or $data->collapsed_authors[$i]->department == null)
+            {
+                $data->collapsed_authors[$i]->department = "Some Department Or None";
+            }
+
+        }
+
         return view("work.show", ["data"=>$data]);
     }
 

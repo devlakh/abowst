@@ -174,7 +174,7 @@ function submit_btn()
         
 }
 
-//Father the data from the modal
+//Gather the data from the modal
 function insert_author()
 {
     let author = {
@@ -187,8 +187,12 @@ function insert_author()
         ,"department":document.querySelector("[data-modal_department]").value
     };
 
-    console.log(document.querySelector("[data-modal_dob]").value);
+    
 
+    //Check if Empty
+    if(document.querySelector("[data-modal_dob]").value == "") author.date_of_birth = null;
+
+    console.log(author.date_of_birth);
     authors.push(author);
 
     render_author(

@@ -28,6 +28,7 @@ class AcademicWork extends Model
                     ,aw.date
                     ,aw.department
                     ,aw.description
+                    ,aw.abstract
                     ,aw.type_of_work
                     ,authors_temp.collapsed_authors
                     FROM academic_works AS aw
@@ -37,6 +38,7 @@ class AcademicWork extends Model
                         GROUP_CONCAT(
                             JSON_OBJECT(
                                 'name',CONCAT(authors.prefix,' ',authors.given_name,' ',authors.middle_name,' ',authors.last_name,' ',authors.suffix)
+                                ,'dob',authors.date_of_birth
                                 ,'department',authors.department
                             ) 
                             SEPARATOR '\0'
