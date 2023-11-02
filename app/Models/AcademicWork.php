@@ -16,6 +16,55 @@ class AcademicWork extends Model
         return $this->hasMany("App\Author");
     }
 
+    //NON-FETCHABLE
+    public function grabMoreDetails($id)
+    {
+        try
+        {
+            $academic_works = DB::select(
+                DB::raw(
+                    "SELECT
+                    aw.title
+                    ,aw.date
+                    ,aw.department
+                    ,aw.description
+                    ,aw.type_of_work
+                    ,authors_temp.collapsed_authors
+                    FROM academic_works AS aw
+                    LEFT JOIN(
+                        SELECT 
+                        authors.academic_works_id, 
+                        GROUP_CONCAT(
+                            JSON_OBJECT(
+                                'name',CONCAT(authors.prefix,' ',authors.given_name,' ',authors.middle_name,' ',authors.last_name,' ',authors.suffix)
+                                ,'department',authors.department
+                            ) 
+                            SEPARATOR '\0'
+                        )AS collapsed_authors 
+                        FROM authors 
+                        GROUP BY authors.academic_works_id
+                    )AS authors_temp 
+                    ON authors_temp.academic_works_id = aw.id
+                    WHERE aw.id = ". unblur($id)
+                )
+            )[0];
+
+            //Convert Collapsed Authors String
+            //Split at separator null
+            //Store Collapsed Authors String into the same dict:key
+            $academic_works->collapsed_authors = explode("\0",$academic_works->collapsed_authors);
+
+            //Convert The Collapsed Authors String into JSON or a Dictionary
+            for($authors_index = 0; $authors_index < count($academic_works->collapsed_authors); $authors_index++)
+            {
+                $academic_works->collapsed_authors[$authors_index] = json_decode($academic_works->collapsed_authors[$authors_index]);
+            }
+
+            return $academic_works;
+        }
+        catch(Throwable $e) {return $e;}
+    }
+
     /**
      * Get Partial 2 Information From DB for the cards
      *
@@ -75,12 +124,8 @@ class AcademicWork extends Model
                     $academic_works[$academic_works_index]->collapsed_authors[$authors_index] = json_decode($academic_works[$academic_works_index]->collapsed_authors[$authors_index]);
                 }
             }
-
             return response(["message"=>"OK", "data"=>$academic_works], 200);
         }
-        catch(Throwable $e)
-        {
-            return response(["message"=>$e->getMessage()], 200)->header('Content-Type', 'application/json');
-        }
+        catch(Throwable $e){return response(["message"=>$e->getMessage()], 200)->header('Content-Type', 'application/json');}
     }
 }

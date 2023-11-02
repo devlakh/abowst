@@ -4,12 +4,11 @@
 
 @section("content")
     @csrf
-    
 
     <div class="row text-center" data-deck>
     
         <div class="col-sm-12 mt-3">
-            <h1> Title </h1>
+            <h1>{{$data->title}}</h1>
             <h5 class="text-muted">Type Of Work</h5>
             <div class="clearfix hidden-xs hidden-sm"></div>
             <h5 class="">Description</h5>
@@ -37,7 +36,7 @@ class Show
 {
     constructor()
     {
-        
+
     }
 }
 var show = new Show();

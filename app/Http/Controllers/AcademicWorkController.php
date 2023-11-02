@@ -88,7 +88,11 @@ class AcademicWorkController extends Controller
      */
     public function show($id)
     {
-        return view("work.show", ["id"=>$id]);
+        $academic_work = new AcademicWork();
+
+        $data = $academic_work->grabMoreDetails($id);
+        // return $data;
+        return view("work.show", ["data"=>$data]);
     }
 
     /**
