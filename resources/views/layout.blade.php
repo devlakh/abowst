@@ -17,6 +17,9 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ url('template_resource/sticky-footer-navbar.css') }}" rel="stylesheet">
+
+    <!-- HELPER JS Custom js functions -->
+    <script src="{{ url('template_resource/helper.js') }}"></script>
   </head>
 
   <body class="bg-dark text-light">
@@ -42,7 +45,7 @@
           </ul>
           <form class="form-inline mt-2 mt-md-0">
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <button class="btn btn-warning my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>
       </nav>
