@@ -26,17 +26,12 @@ CREATE TABLE IF NOT EXISTS `academic_works` (
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `date` date NOT NULL,
-  `department` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `language` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `department` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `abstract` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `type_of_work` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `page_count` int(10) unsigned NOT NULL DEFAULT 0,
-  `publisher` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `issn` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `isbn` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Data exporting was unselected.
 
@@ -45,17 +40,16 @@ CREATE TABLE IF NOT EXISTS `authors` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `academic_works_id` bigint(20) unsigned NOT NULL,
   `prefix` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `given_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `given_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `middle_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `suffix` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL,
-  `department` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_lead` tinyint(1) DEFAULT 0,
+  `department` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `authors_academic_work_id_index` (`academic_works_id`) USING BTREE,
   CONSTRAINT `authors_academic_works_foreign_key` FOREIGN KEY (`academic_works_id`) REFERENCES `academic_works` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Data exporting was unselected.
 
