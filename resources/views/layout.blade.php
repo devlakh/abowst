@@ -12,6 +12,9 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/">
 
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
     <!-- Bootstrap core CSS -->
     <link href="{{ url('template_resource/bootstrap.min.css') }}" rel="stylesheet">
 
@@ -31,22 +34,49 @@
         <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="navbar-collapse collapse" id="navbarCollapse" style="">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('landing.splash') }}">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('landing.about') }}">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('landing.contact') }}">Contact</a>
-            </li>
-          </ul>
-          <form class="form-inline mt-2 mt-md-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            <button class="btn btn-warning my-2 my-sm-0" type="submit">Search</button>
-          </form>
+        <div class="navbar-collapse collapse justify-content-end" id="navbarCollapse" style="">
+          <div class="row">
+            
+            <div class="col-sm-6 d-flex align-items-start">
+              <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('landing.splash') }}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('landing.about') }}">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ route('landing.contact') }}">Contact</a>
+              </li>
+
+              @if (Auth::check())
+              <li class="nav-item">
+                <a class="nav-link text-warning" href="{{ route('user.logout') }}">Logout</a>
+              </li>
+              @else
+              <li class="nav-item">
+                <a class="nav-link text-success" href="{{ route('user.login_page') }}">Login</a>
+              </li>
+              @endif
+
+
+              </ul>
+            </div>
+
+            <div class="col-sm-6 d-flex align-items-end">
+              
+              <form class="input-group" method="get" action="{{ route('search.results') }}">
+                <input type="text" class="form-control" placeholder="Search" name="query" data-input_field>
+                <div class="input-group-append">
+                  <button class="btn btn-success" type="submit"><i class="fas fa-search"></i></button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+          
+          
+
         </div>
       </nav>
     </header>
@@ -59,7 +89,12 @@
 
     <footer class="footer bg-dark">
       <div class="container-fluid bg-secondary mt-3">
-        <span class="text-muted">Place sticky footer content here.</span>
+          @if (Auth::check())
+          <span class="text-warning">Logged In As {{ auth()->user()->name }}</span>
+          @else
+          <span class="text-muted">Place sticky footer content here.</span>
+          @endif
+        
       </div>
     </footer>
 

@@ -8,10 +8,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PHPUnit\Runner\Exception;
 use Illuminate\Support\Facades\DB;
+use Mockery\Undefined;
 use Throwable;
 
 class AcademicWorkController extends Controller
 {
+    public function __construct()
+    {
+        // Assign only to specific methods in this Controller
+        $this->middleware('auth')->only(['create', 'store']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +26,6 @@ class AcademicWorkController extends Controller
     public function index()
     {
         return view("work.index");
-        // return view("work.index",["papers" => AcademicWork::all()]);
     }
 
     /**
@@ -58,7 +63,7 @@ class AcademicWorkController extends Controller
         catch(Throwable $e)
         {
             DB::rollback();
-            return response(["message"=>$e->getMessage()], 200)->header('Content-Type', 'application/json');
+            return response(["message"=>"Something Went Wrong", "err"=>$e->getMessage()], 200)->header('Content-Type', 'application/json');
         }
 
         return response(["message"=>"Data Inserted To Database"], 200)->header('Content-Type', 'application/json');
@@ -96,6 +101,8 @@ class AcademicWorkController extends Controller
         if(preg_match('/^[aeiou]/i', $data->type_of_work)) $data->type_of_work = "An " . ucfirst($data->type_of_work);
         else $data->type_of_work = "A " . ucfirst($data->type_of_work);
 
+        //Check Department
+        if($data->department == "")$data->department = "Individual";
         $data->department = ucfirst($data->department);
 
         $exploded_date = explode("-",$data->date);
@@ -103,17 +110,17 @@ class AcademicWorkController extends Controller
 
         for($i = 0; $i < count($data->collapsed_authors); $i++)
         {
-            if(strlen(trim($data->collapsed_authors[$i]->name)) == 0 or $data->collapsed_authors[$i]->name == null)
+            if(strlen(trim($data->collapsed_authors[$i]->name)) == 0)
             {
                 $data->collapsed_authors[$i]->name = "Anon";
             }
 
-            if(strlen(trim($data->collapsed_authors[$i]->dob)) == 0 or $data->collapsed_authors[$i]->dob == null)
+            if(strlen(trim($data->collapsed_authors[$i]->dob)) == 0)
             {
                 $data->collapsed_authors[$i]->dob = "At Some Moment In Time";
             }
 
-            if(strlen(trim($data->collapsed_authors[$i]->department)) == 0 or $data->collapsed_authors[$i]->department == null)
+            if(strlen(trim($data->collapsed_authors[$i]->department)) == 0)
             {
                 $data->collapsed_authors[$i]->department = "Some Department Or None";
             }

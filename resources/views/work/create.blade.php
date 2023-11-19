@@ -81,8 +81,12 @@
                 <label for="isbn">ISBN <small class="text-muted">(optional)</small></label>
                 <input type="text" class="form-control" id="isbn" placeholder="Enter International Standard Book Number" data-isbn>
             </div>
-
+            
+            <div class="form-group">
+                <label for="add_author"><small class="text-warning">(Required Atleast 1 Author)</small></label>
+            </div>
             <button id="add_author" type="button" class="btn btn-warning" data-toggle="modal" data-target="#authors_modal"> Add Author </button>
+            
 
             
 
@@ -94,6 +98,12 @@
             <div class="form-group text-right mb-0 mt-3">
                 <button type="submit" class="btn btn-success">Submit</button>
             </div>
+
+            <div class="form-group text-info text-right mb-0 mt-5" style="display:none" data-message_container>
+                <button type="button" class="close ml-3" data-message_button><span>&times;</span></button>
+                <h3 data-message></h3>
+            </div>
+
 
         </form>
     
@@ -126,8 +136,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="modal_given_name">Given Name <small class="text-muted">(optional)</small></label>
-                    <input type="text" class="form-control" id="modal_given_name" placeholder="Enter Given Name" data-modal_given_name>
+                    <label for="modal_given_name">Given Name <small class="text-warning">(required)</small></label>
+                    <input required type="text" class="form-control" id="modal_given_name" placeholder="Enter Given Name" data-modal_given_name>
                 </div>
 
                 <div class="form-group">
@@ -168,6 +178,10 @@
     //Event Listeners
     document.querySelector("[data-main_form]").addEventListener("submit", submit);
     document.querySelector("[data-modal_form]").addEventListener("submit", insert_author);
+    document.querySelector("[data-message_button]").addEventListener("click", ()=>{
+        document.querySelector("[data-message_container]").style.display = "none";
+        document.querySelector("[data-message]").innerHTML = "";
+    });
 
     //Used for emulating DB Like Behavior
     //on author removal , authors[index] = null
@@ -176,6 +190,15 @@
 
     function submit()
     {
+        event.preventDefault();
+
+        if(clean_list(authors).length == 0)
+        {
+            document.querySelector("[data-message_container]").style.display = "block"; 
+            document.querySelector("[data-message]").innerHTML = "Please Add Atleast 1 Author";
+            return;
+        }
+
         let formData = new FormData();
         formData.append("academic_work", JSON.stringify({
             "title":document.querySelector("[data-title]").value
@@ -199,13 +222,14 @@
         })
         .then(response => response.json())
         .then(results => {
-            console.log('Success:', results);
+            console.log(results["err"]);
+            document.querySelector("[data-message_container]").style.display = "block"; 
+            document.querySelector("[data-message]").innerHTML = results.message;
         })
         .catch(error => {
-            console.error('Error:', error);
+            document.querySelector("[data-message_container]").style.display = "block"; 
+            document.querySelector("[data-message]").innerHTML = "Something Went Wrong";
         });
-        
-        event.preventDefault();
     }
 
     /**
@@ -219,14 +243,11 @@
             ,"middle_name":document.querySelector("[data-modal_middle_name]").value
             ,"last_name":document.querySelector("[data-modal_last_name]").value
             ,"suffix":document.querySelector("[data-modal_suffix]").value
-            ,"date_of_birth":document.querySelector("[data-modal_dob]").value
+            ,"date_of_birth":document.querySelector("[data-modal_dob]").value != "" ? document.querySelector("[data-modal_dob]").value : null
             ,"department":document.querySelector("[data-modal_department]").value
             ,"is_lead":false
         };
-
-        //Check if Empty
-        if(document.querySelector("[data-modal_dob]").value == "") author.date_of_birth = null;
-
+        
         authors.push(author);
 
         render_author(

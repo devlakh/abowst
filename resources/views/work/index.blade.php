@@ -8,6 +8,7 @@
 
     <div class="row" data-deck>
     <!-- text-center -->
+        @auth
         <div class="col-sm-6 mt-3">
             <div class="card bg-secondary h-100 text-center">
                 <div class="card-body">
@@ -20,6 +21,7 @@
                 </div>
             </div>
         </div>
+        @endauth
 
         <div class="col-sm-6 mt-3" data-last_card>
             <div class="card bg-secondary h-100 text-center">
@@ -29,7 +31,7 @@
                     <p class="card-text text-info" data-last_card_message>Loading Data</p>
                 </div>
                 <div class="card-footer p-0">
-                    <button type="button" class="btn btn-outline-warning btn-lg btn-block" onclick="index.pullCards();">Load More</button>
+                    <button type="button" class="btn btn-outline-warning btn-lg btn-block" data-load_more_button>Load More</button>
                 </div>
             </div>
         </div>
@@ -38,33 +40,33 @@
 @endsection
 @section("scripts")
 <script>
-class Index
-{
+(()=>{
+    let limit = 2;
+    let offset = 0;
+    
     /**
      * 
-     * @TODO - Modal For More Details 
-     * @TODO - Modal For Message After Inserting Data
-     * or
-     * @TODO - Redirect to Success After Inserting Data
-     * 
+     * @param {html_element} _element
+     * @param {string} _bs_color 
+     * @param {string} _message 
      */
-    constructor()
+    function render_last_card_message(_element, _bs_color, _message)
     {
-        this.limit = 5;
-        this.offset = 0;
-        this.pullCards();
+        _element.innerHTML = _message;
+        _element.setAttribute("class", "card-text text-" + _bs_color);
     }
-
-
+ 
     /**
      * Gather Data For The Cards In The Deck.
      *
      */
-    pullCards()
+    function pullCards()
     {
+        let last_card_message = document.querySelector("[data-last_card_message]");
+
         let formData = new FormData();
-        formData.append("limit", this.limit);
-        formData.append("offset", this.offset);
+        formData.append("limit", limit);
+        formData.append("offset", offset);
 
         fetch("{{ route('work.grabCardsPartial') }}", {
             method: 'POST',
@@ -73,33 +75,21 @@ class Index
         })
         .then(response => response.json())
         .then(results => {
-            let last_card_message = document.querySelector("[data-last_card_message]");
-
-            if(results.data === undefined) this.last_card_message(last_card_message, "danger", "Could Not Connect To Server");
-            else if(results.data.length == 0)this.last_card_message(last_card_message, "warning", "⚠ No Additional Data ⚠");
+            
+            if(results.data === undefined) render_last_card_message(last_card_message, "danger", "Could Not Connect To Server");
+            else if(results.data.length == 0) render_last_card_message(last_card_message, "warning", "⚠ No Additional Data ⚠");
             else
             {
-                this.fillDeck(results.data);
-                this.offset += this.limit;
-                this.last_card_message(last_card_message, "info", "New Data Has Been Loaded");
+                fillDeck(results.data);
+                offset += limit;
+                render_last_card_message(last_card_message, "info", "New Data Has Been Loaded");
             }
 
         })
         .catch(error => {
             console.error('Error:', error);
+            render_last_card_message(last_card_message, "danger", "Failed To Load Data");
         });
-    }
-
-    /**
-     * 
-     * @param {html_element} _element
-     * @param {string} _bs_color 
-     * @param {string} _message 
-     */
-    last_card_message(_element, _bs_color, _message)
-    {
-        _element.innerHTML = _message;
-        _element.setAttribute("class", "card-text text-" + _bs_color);
     }
 
     /**
@@ -107,13 +97,13 @@ class Index
      *
      * @param {dictionary} _results - an array with collapsed authors
      */
-    fillDeck(_results)
+    function fillDeck(_results)
     {
         //Go Through all the card details
         for(let i = 0; i < _results.length; i++)
         {
             //Render The Card
-            this.renderCard(_results[i]);
+            renderCard(_results[i]);
         }
         
         //Keep Moving The last Card to The end of the deck
@@ -129,7 +119,7 @@ class Index
      *
      * @param {dictionary} _data - Card Details
      */
-    renderCard(_data)
+    function renderCard(_data)
     {
         //Gather Elements
         let deck = document.querySelector("[data-deck]");
@@ -199,7 +189,9 @@ class Index
         card.appendChild(footer);
         footer.appendChild(more_details_btn);
     }
-}
-var index = new Index();
+
+    pullCards();
+    document.querySelector("[data-load_more_button]").addEventListener("click", pullCards);
+})();
 </script>
 @endsection
