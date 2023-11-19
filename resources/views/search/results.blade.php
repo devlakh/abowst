@@ -11,10 +11,12 @@
 <script>
 (()=>{
     let query = "{{ request()->get('query') }}";
+    let filters = {};
     document.querySelector("[data-input_field]").value = query;
 
     let formData = new FormData();
     formData.append("query", query);
+    formData.append("filters", JSON.stringify(filters));
 
     fetch("{{ route('search.query') }}", {
         method: 'POST',
@@ -24,7 +26,7 @@
     .then(response => response.json())
     .then(results => {
         
-        console.log(results.message);
+        console.log(results);
 
     })
     .catch(error => {
