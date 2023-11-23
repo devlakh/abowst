@@ -15,20 +15,17 @@ class SearchController extends Controller
     function query(Request $request)
     {
         $search = new Search();
+        $limit = $request->get('limit');
+        $offset = $request->get('offset');
         $query = $request->get('query');
         $filters = json_decode($request->get('filters'));
         $result = array();
 
         //Check if query is Whitespaces or Empty
         if (ctype_space($query) || $query == "") {
-            $result = $search->blank();
+            $result = $search->blank($limit, $offset, $filters);
         }
 
-        return response(
-            [
-                "message"=>"Hello Results Searching for ". $query . "with filters " . json_encode($filters), 
-                "data" => $result
-            ]
-            , 200)->header('Content-Type', 'application/json');
+        return $result;
     }
 }

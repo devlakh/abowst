@@ -110,20 +110,20 @@ class AcademicWork extends Model
                 )
             );
             
-            for($academic_works_index = 0; $academic_works_index < count($academic_works); $academic_works_index++)
+            for($i = 0; $i < count($academic_works); $i++)
             {   
                 //Convert Collapsed Authors String
                 //Split at separator null
                 //Store Collapsed Authors String into the same dict:key
-                $academic_works[$academic_works_index]->collapsed_authors = explode("\0",$academic_works[$academic_works_index]->collapsed_authors);
+                $academic_works[$i]->collapsed_authors = explode("\0",$academic_works[$i]->collapsed_authors);
 
                 //Blur ID
-                $academic_works[$academic_works_index]->id = blur($academic_works[$academic_works_index]->id);
+                $academic_works[$i]->id = blur($academic_works[$i]->id);
 
                 //Convert The Collapsed Authors String into JSON or a Dictionary
-                for($authors_index = 0; $authors_index < count($academic_works[$academic_works_index]->collapsed_authors); $authors_index++)
+                for($j = 0; $j < count($academic_works[$i]->collapsed_authors); $j++)
                 {
-                    $academic_works[$academic_works_index]->collapsed_authors[$authors_index] = json_decode($academic_works[$academic_works_index]->collapsed_authors[$authors_index]);
+                    $academic_works[$i]->collapsed_authors[$j] = json_decode($academic_works[$i]->collapsed_authors[$j]);
                 }
             }
             return response(["message"=>"OK", "data"=>$academic_works], 200);
